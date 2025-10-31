@@ -19,7 +19,7 @@ GameObject:
   - component: {fileID: 3572596859276583571}
   m_Layer: 0
   m_Name: Player
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -109,7 +109,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.NetworkObject
-  GlobalObjectIdHash: 779948221
+  GlobalObjectIdHash: 4136255313
   InScenePlacedSourceGlobalObjectIdHash: 0
   DeferredDespawnTick: 0
   Ownership: 1
@@ -184,8 +184,9 @@ MonoBehaviour:
   moveSpeed: 15
   rotateSpeed: 2
   rigidBodyReference: {fileID: 1535662881781737918}
-  tankProjectilePrefab: {fileID: 6205066342620013583, guid: a26f366ee2e818c4c94c42f79a1a4441, type: 3}
+  tankProjectilePrefab: {fileID: -6627273256551021122, guid: a26f366ee2e818c4c94c42f79a1a4441, type: 3}
   weaponTip: {fileID: 8794994149726944879}
+  bulletSpeed: 20
 --- !u!54 &1535662881781737918
 Rigidbody:
   m_ObjectHideFlags: 0

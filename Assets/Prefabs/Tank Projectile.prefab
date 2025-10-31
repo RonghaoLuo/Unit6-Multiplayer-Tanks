@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 6911411144139706773}
   - component: {fileID: 148824982018854702}
   - component: {fileID: 441799785060059855}
+  - component: {fileID: -6627273256551021122}
   m_Layer: 0
   m_Name: Tank Projectile
   m_TagString: Untagged
@@ -116,7 +117,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 636083018389774718}
   serializedVersion: 5
-  m_Mass: 1
+  m_Mass: 0.1
   m_LinearDamping: 0
   m_AngularDamping: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
@@ -152,6 +153,20 @@ MonoBehaviour:
   UseRigidBodyForMotion: 0
   AutoUpdateKinematicState: 1
   AutoSetKinematicOnDespawn: 1
+--- !u!114 &-6627273256551021122
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 636083018389774718}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 28b9b0d5a33cbd047904a191e42b21c1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::NetworkBullet
+  ShowTopMostFoldoutHeaderGroup: 1
+  bulletRigidbody: {fileID: 148824982018854702}
 --- !u!1 &861500699072654241
 GameObject:
   m_ObjectHideFlags: 0

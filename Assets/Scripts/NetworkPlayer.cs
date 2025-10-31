@@ -9,8 +9,9 @@ public class NetworkPlayer : NetworkBehaviour
     [SerializeField] private Rigidbody rigidBodyReference;
 
     [Header("Shooting")]
-    [SerializeField] private NetworkObject tankProjectilePrefab;
+    [SerializeField] private NetworkBullet tankProjectilePrefab;
     [SerializeField] private Transform weaponTip;
+    [SerializeField] private float bulletSpeed;
 
     private float forwardValue;
     private float rotateValue;
@@ -39,13 +40,12 @@ public class NetworkPlayer : NetworkBehaviour
         {
             forwardValue = Input.GetAxisRaw("Vertical");
             rotateValue = Input.GetAxisRaw("Horizontal");
+
+            if (Input.GetKeyDown(KeyCode.Mouse0))
+            {
+                ShootProjectileRpc();
+            }
         }
-        
-        if (Input.GetKeyDown(KeyCode.Mouse0))
-        {
-            ShootProjectile();
-        }
-        
     }
 
     private void FixedUpdate()
@@ -57,8 +57,12 @@ public class NetworkPlayer : NetworkBehaviour
         }
     }
 
-    private void ShootProjectile()
+    [Rpc(SendTo.Server)]
+    private void ShootProjectileRpc()
     {
-        NetworkManager.SpawnManager.InstantiateAndSpawn(tankProjectilePrefab, position: weaponTip.position, rotation: weaponTip.rotation);
+        NetworkBullet clonedBullet = Instantiate(tankProjectilePrefab, position: weaponTip.position, rotation: weaponTip.rotation);
+        clonedBullet.NetworkObject.Spawn();
+        clonedBullet.ApplyBulletForce(bulletSpeed);
+
     }
 }
