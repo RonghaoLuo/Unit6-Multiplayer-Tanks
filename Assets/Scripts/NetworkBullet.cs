@@ -20,6 +20,8 @@ public class NetworkBullet : NetworkBehaviour
             {
                 Debug.Log(collision.gameObject.name + " was hit");
                 // Decrease Health
+                NetworkPlayerInfo playerInfo = collision.collider.GetComponent<NetworkPlayerInfo>();
+                playerInfo.DecreaseHealth();
             }
         }
         else

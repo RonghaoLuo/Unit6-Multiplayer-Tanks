@@ -13,6 +13,8 @@ public class NetworkPlayer : NetworkBehaviour
     [SerializeField] private Transform weaponTip;
     [SerializeField] private float bulletSpeed;
 
+    [SerializeField] private NetworkPlayerInfo playerInfo;
+
     private float forwardValue;
     private float rotateValue;
 
@@ -28,6 +30,12 @@ public class NetworkPlayer : NetworkBehaviour
         if (IsLocalPlayer)
         {
             Debug.Log("Initializing Inputs and Variables");
+        }
+
+        if (IsOwner)
+        {
+            Transform spawnPoint = FindAnyObjectByType<NetworkSpawnSystem>().GetRandomSpawnPoint();
+            transform.position = spawnPoint.position;
         }
 
         Debug.Log("Player " + OwnerClientId + " Spawned");
@@ -64,5 +72,39 @@ public class NetworkPlayer : NetworkBehaviour
         clonedBullet.NetworkObject.Spawn();
         clonedBullet.ApplyBulletForce(bulletSpeed);
 
+    }
+
+    public void KillPlayer()
+    {
+        // send RPC to Client
+        // Make tank disappear
+        // spawn effect
+        ClientSide_KillPlayerRpc();
+
+        Invoke("RespawnPlayer", 4f);
+    }
+
+    [Rpc(SendTo.Owner)]
+    public void ClientSide_KillPlayerRpc()
+    {
+        // lock input
+        // make tank disappear
+    }
+
+    /// <summary>
+    /// Executed by server
+    /// </summary>
+    public void RespawnPlayer()
+    {
+        ClientSide_RespawnPlayerRpc();
+        playerInfo.health.Value = playerInfo.maxHealth;
+    }
+
+    [Rpc(SendTo.Owner)]
+    public void ClientSide_RespawnPlayerRpc()
+    {
+        // unlock input
+        Transform spawnPoint = FindAnyObjectByType<NetworkSpawnSystem>().GetRandomSpawnPoint();
+        transform.position = spawnPoint.position;
     }
 }

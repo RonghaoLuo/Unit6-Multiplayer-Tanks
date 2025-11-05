@@ -6,6 +6,7 @@ public class UIMultiplayerMenu : MonoBehaviour
 {
     [SerializeField] private TextMeshProUGUI chatMessage;
     [SerializeField] private TMP_InputField messageInputField;
+    [SerializeField] private TMP_InputField nicknameInputField;
 
     private ChatManager chatManager;
 
@@ -62,5 +63,10 @@ public class UIMultiplayerMenu : MonoBehaviour
         // needs to be dispalyed on the chat
 
         chatMessage.text += msgParam + "\n";
+    }
+
+    public string GetNicknameInput()
+    {
+        return nicknameInputField.text;
     }
 }
