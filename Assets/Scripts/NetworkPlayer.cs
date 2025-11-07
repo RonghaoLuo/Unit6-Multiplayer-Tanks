@@ -51,7 +51,7 @@ public class NetworkPlayer : NetworkBehaviour
 
             if (Input.GetKeyDown(KeyCode.Mouse0))
             {
-                ShootProjectileRpc();
+                ShootProjectile();
             }
         }
     }
@@ -65,8 +65,8 @@ public class NetworkPlayer : NetworkBehaviour
         }
     }
 
-    [Rpc(SendTo.Server)]
-    private void ShootProjectileRpc()
+    //[Rpc(SendTo.Server)]
+    private void ShootProjectile()
     {
         NetworkBullet clonedBullet = Instantiate(tankProjectilePrefab, position: weaponTip.position, rotation: weaponTip.rotation);
         clonedBullet.NetworkObject.Spawn();
@@ -79,32 +79,29 @@ public class NetworkPlayer : NetworkBehaviour
         // send RPC to Client
         // Make tank disappear
         // spawn effect
-        ClientSide_KillPlayerRpc();
-
+        
+        NetworkObject.Despawn(false);
+        gameObject.SetActive(false);
         Invoke("RespawnPlayer", 4f);
     }
 
-    [Rpc(SendTo.Owner)]
-    public void ClientSide_KillPlayerRpc()
-    {
-        // lock input
-        // make tank disappear
-    }
 
     /// <summary>
     /// Executed by server
     /// </summary>
     public void RespawnPlayer()
     {
-        ClientSide_RespawnPlayerRpc();
-        playerInfo.health.Value = playerInfo.maxHealth;
-    }
+        gameObject.SetActive(true);
 
-    [Rpc(SendTo.Owner)]
-    public void ClientSide_RespawnPlayerRpc()
-    {
-        // unlock input
         Transform spawnPoint = FindAnyObjectByType<NetworkSpawnSystem>().GetRandomSpawnPoint();
         transform.position = spawnPoint.position;
+
+        playerInfo.health.Value = playerInfo.maxHealth;
+        
+        
+
+        NetworkObject.SpawnAsPlayerObject(OwnerClientId);
     }
+
+    
 }

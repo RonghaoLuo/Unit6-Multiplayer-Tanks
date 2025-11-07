@@ -1,6 +1,13 @@
 using TMPro;
 using Unity.Netcode;
 using UnityEngine;
+using System;
+using System.Threading.Tasks;
+using Unity.Services.Authentication;
+using Unity.Services.Core;
+using Unity.Services.Multiplayer;
+using System.Collections;
+using Unity.VisualScripting;
 
 public class UIMultiplayerMenu : MonoBehaviour
 {
@@ -9,9 +16,12 @@ public class UIMultiplayerMenu : MonoBehaviour
     [SerializeField] private TMP_InputField nicknameInputField;
 
     private ChatManager chatManager;
+    private ISession mySession;
 
     private void Awake()
     {
+        
+
         messageInputField.interactable = false;
 
         
@@ -29,9 +39,10 @@ public class UIMultiplayerMenu : MonoBehaviour
     private void OnDestroy()
     {
         chatManager.OnReceiveMessage -= ReceiveMessageFromChat;
+        mySession?.LeaveAsync();
     }
 
-    public void StartHost()
+    public void StartHostButton()
     {
         NetworkManager.Singleton.StartHost();
         TryLinkChatManager();
@@ -39,10 +50,12 @@ public class UIMultiplayerMenu : MonoBehaviour
         messageInputField.interactable = true;
     }
 
-    public void StartClient()
+    public void StartClientButton()
     {
-        TryLinkChatManager();
-        NetworkManager.Singleton.StartClient();
+        Debug.Log("On Click Join Button");
+        //NetworkManager.Singleton.StartClient();
+
+        StartCoroutine(JoinMultiplayerGame());
 
         messageInputField.interactable = true;
     }
@@ -68,5 +81,38 @@ public class UIMultiplayerMenu : MonoBehaviour
     public string GetNicknameInput()
     {
         return nicknameInputField.text;
+    }
+
+    /// <summary>
+    /// waits for the InitializeAsync to finish
+    /// </summary>
+    /// <returns></returns>
+    public IEnumerator JoinMultiplayerGame()
+    {
+
+        Debug.Log("Begin coroutine");
+        yield return UnityServices.InitializeAsync();
+        Debug.Log("Unity Services Initialized");
+        yield return JoinOrCreateGameSession();
+
+        TryLinkChatManager();
+    }
+
+    /// <summary>
+    /// Shortcut way to Join or Create a Session
+    /// </summary>
+    /// <returns></returns>
+    public async Task JoinOrCreateGameSession()
+    {
+        
+        await AuthenticationService.Instance.SignInAnonymouslyAsync();
+        Debug.Log("SignInAnonymously");
+        SessionOptions sessionOptions = new SessionOptions()
+        {
+            Name = "TestID3",
+            MaxPlayers = 5,
+        }.WithDistributedAuthorityNetwork();
+
+        mySession = await MultiplayerService.Instance.CreateOrJoinSessionAsync("TestID3", sessionOptions);
     }
 }

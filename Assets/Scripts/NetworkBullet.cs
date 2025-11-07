@@ -12,7 +12,7 @@ public class NetworkBullet : NetworkBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (IsServer && IsSpawned)
+        if (IsSpawned && HasAuthority)
         {
             NetworkObject.Despawn();
 
@@ -21,7 +21,7 @@ public class NetworkBullet : NetworkBehaviour
                 Debug.Log(collision.gameObject.name + " was hit");
                 // Decrease Health
                 NetworkPlayerInfo playerInfo = collision.collider.GetComponent<NetworkPlayerInfo>();
-                playerInfo.DecreaseHealth();
+                playerInfo.DecreaseHealthRpc();
             }
         }
         else

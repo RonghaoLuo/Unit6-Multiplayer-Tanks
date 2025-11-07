@@ -8,7 +8,7 @@ public class NetworkPlayerInfo : NetworkBehaviour
 {
     public NetworkVariable<int> health = new(
         readPerm: NetworkVariableReadPermission.Everyone, 
-        writePerm: NetworkVariableWritePermission.Server);
+        writePerm: NetworkVariableWritePermission.Owner);
 
     public NetworkVariable<FixedString32Bytes> nickname = new(
         readPerm: NetworkVariableReadPermission.Everyone,
@@ -23,13 +23,9 @@ public class NetworkPlayerInfo : NetworkBehaviour
     {
         base.OnNetworkSpawn();
 
-        if (IsLocalPlayer && IsOwner)
+        if (HasAuthority)
         {
             nickname.Value = FindAnyObjectByType<UIMultiplayerMenu>().GetNicknameInput();
-        }
-
-        if (IsServer)
-        {
             health.Value = maxHealth;
         }
 
@@ -59,9 +55,10 @@ public class NetworkPlayerInfo : NetworkBehaviour
     }
 
     /// <summary>
-    /// Only executed on the server
+    /// Only executed by the authority
     /// </summary>
-    public void DecreaseHealth()
+    [Rpc(SendTo.Owner)]
+    public void DecreaseHealthRpc()
     {
         health.Value--;
 
