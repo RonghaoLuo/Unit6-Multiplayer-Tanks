@@ -42,6 +42,7 @@ public class UIMultiplayerMenu : MonoBehaviour
         mySession?.LeaveAsync();
     }
 
+    // Not used for Distributed Authority
     public void StartHostButton()
     {
         NetworkManager.Singleton.StartHost();
@@ -50,6 +51,7 @@ public class UIMultiplayerMenu : MonoBehaviour
         messageInputField.interactable = true;
     }
 
+    // Join Game Button
     public void StartClientButton()
     {
         Debug.Log("On Click Join Button");
